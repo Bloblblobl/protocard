@@ -1,5 +1,3 @@
-import os
-
 from math import floor
 
 
@@ -26,12 +24,6 @@ def fit_info(text, length, alignment='left', spc=' '):
         return str(text)[0:length]
 
 
-def _get_border(card):
-    if card.exhausted:
-        return '0'
-    return '*'
-
-
 def _extend_map(r_map, size):
     for i in range(0, size):
         r_map.append('')
@@ -39,15 +31,15 @@ def _extend_map(r_map, size):
 
 
 def _render_empty_hand_card(r_map, sp):
-    r_map[sp + 0] += '   :::::::::::::   '
-    r_map[sp + 1] += '   :           :   '
-    r_map[sp + 2] += '   :           :   '
-    r_map[sp + 3] += '   :           :   '
-    r_map[sp + 4] += '   :           :   '
-    r_map[sp + 5] += '   :           :   '
-    r_map[sp + 6] += '   :           :   '
-    r_map[sp + 7] += '   :           :   '
-    r_map[sp + 8] += '   :::::::::::::   '
+    r_map[sp + 0] += '   ▄▄▄▄▄▄▄▄▄▄▄   '
+    r_map[sp + 1] += '   █         █   '
+    r_map[sp + 2] += '   █         █   '
+    r_map[sp + 3] += '   █         █   '
+    r_map[sp + 4] += '   █    ╳    █   '
+    r_map[sp + 5] += '   █         █   '
+    r_map[sp + 6] += '   █         █   '
+    r_map[sp + 7] += '   █         █   '
+    r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
 
 
 
@@ -57,15 +49,15 @@ def render_enemy_hand(hand, r_map, sp=0):
     for i in range(0, hand.max_size):
         try:
             card = hand.cards[i]
-            r_map[sp + 0] += '   :::::::::::::   '
-            r_map[sp + 1] += '   :|||||||||||:   '
-            r_map[sp + 2] += '   :|||||||||||:   '
-            r_map[sp + 3] += '   :|||||||||||:   '
-            r_map[sp + 4] += '   :|||||||||||:   '
-            r_map[sp + 5] += '   :|||||||||||:   '
-            r_map[sp + 6] += '   :|||||||||||:   '
-            r_map[sp + 7] += '   :|||||||||||:   '
-            r_map[sp + 8] += '   :::::::::::::   '
+            r_map[sp + 0] += '   ▄▄▄▄▄▄▄▄▄▄▄   '
+            r_map[sp + 1] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 2] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 3] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 4] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 5] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 6] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 7] += '   █▓▓▓▓▓▓▓▓▓█   '
+            r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
         except:
             _render_empty_hand_card(r_map, sp)
     r_map[sp + 9] = ''
@@ -82,67 +74,52 @@ def render_player_hand(hand, r_map, sp=0):
             c = 'CC'
             name = fit_info(card.name, 9, 'mid')
             effects = '.....'
-            atk = fit_info(card.attack, 2, spc='-')
-            hlt = fit_info(card.health, 2, 'right', '-')
+            atk = fit_info(card.attack_stat, 2, spc='/')
+            hlt = fit_info(card.health_stat, 2, 'right', '\\')
 
-            r_map[sp + 0] += '   /-----------\\   '
-            r_map[sp + 1] += '   | [##] [CC] |   '.replace('##', num) \
-                                                  .replace('CC', c)
-            r_map[sp + 2] += '   | NAME~~~~~ |   '.replace('NAME~~~~~', name)
-            r_map[sp + 3] += '   |           |   '
-            r_map[sp + 4] += '   |   .....   |   '.replace('.....', effects)
-            r_map[sp + 5] += '   |           |   '
-            r_map[sp + 6] += '   |__       __|   '
-            r_map[sp + 7] += '   |AA|     |HH|   '.replace('AA', atk) \
-                                                  .replace('HH', hlt)
-            r_map[sp + 8] += '   \\-----------/   '
-        except:
+            r_map[sp + 0] += '   ▄▄▄▄▄▄▄▄▄▄▄   '
+            r_map[sp + 1] += '   █##│   │CC█   '.replace('##', num).replace('CC', c)
+            r_map[sp + 2] += '   █──╯   ╰──█   '
+            r_map[sp + 3] += '   █~~NAME!~~█   '.replace('~~NAME!~~', name)
+            r_map[sp + 4] += '   █  .....  █   '.replace('.....', effects)
+            r_map[sp + 5] += '   █         █   '
+            r_map[sp + 6] += '   █──╮   ╭──█   '
+            r_map[sp + 7] += '   █AA│   │HH█   '.replace('AA', atk).replace('HH', hlt)
+            r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
+        except Exception as e:
             _render_empty_hand_card(r_map, sp)
     r_map[sp + 9] = ''
     return sp + 10
 
 
 def render_board(board, r_map, sp=0):
-    r_map = _extend_map(r_map, 13)
+    r_map = _extend_map(r_map, 6)
     for i in range(0, board.max_size):
         try:
             card = board.cards[i]
-            num = fit_info(i, 2, 'right', '#')
-            c = 'CC'
+            num = fit_info(i, 3, 'mid', '#')
             name = fit_info(card.name, 9, 'mid')
             effects = '.....'
-            atk = fit_info(card.attack, 2, spc='/')
-            hlt = fit_info(card.health, 2, 'right', '\\')
-            border = _get_border(card)
-            r_map[sp + 0] += ' ' + border*17 + ' '
-            r_map[sp + 1] += ' ~//===========\\\~ '
-            r_map[sp + 2] += ' ~|| [##] [CC] ||~ '.replace('##', num) \
-                                                  .replace('CC', c)
-            r_map[sp + 3] += ' ~|| NAME~~~~~ ||~ '.replace('NAME~~~~~', name)
-            r_map[sp + 4] += ' ~||           ||~ '
-            r_map[sp + 5] += ' ~||   .....   ||~ '.replace('.....', effects)
-            r_map[sp + 6] += ' ~||           ||~ '
-            r_map[sp + 7] += ' ~||           ||~ '
-            r_map[sp + 8] += ' ~||           ||~ '
-            r_map[sp + 9] += ' ~||[AA]   [HH]||~ '.replace('AA', atk) \
-                                                  .replace('HH', hlt)
-            r_map[sp +10] += ' ~\\\===========//~ '
-            r_map[sp +11] += ' ' + border*17 + ' '
-            for j in range(1, 11):
-                r_map[sp + j] = r_map[sp + j].replace('~', border)
+            atk = fit_info(card.attack_curr, 2, spc='/')
+            hlt = fit_info(card.health_curr, 2, 'right', '\\')
+            if card.exhausted:
+                r_map[sp + 0] += '   ╭┄┄┄┄┄┄┄┄┄╮   '
+                r_map[sp + 1] += '   ┆  NAME!  ┆   '.replace('~~NAME!~~', name)
+                r_map[sp + 2] += '   ├┄┄╮   ╭┄┄┤   '
+                r_map[sp + 3] += '   ┆AA┆###┆HH┆   '.replace('AA', atk).replace('HH', hlt).replace('###', num)
+                r_map[sp + 4] += '   ╰┄┄┴┄┄┄┴┄┄╯   '
+            else:
+                r_map[sp + 0] += '   ╭─────────╮   '
+                r_map[sp + 1] += '   │~~NAME!~~│   '.replace('~~NAME!~~', name)
+                r_map[sp + 2] += '   ├──╮   ╭──┤   '
+                r_map[sp + 3] += '   │AA│###│HH│   '.replace('AA', atk).replace('HH', hlt).replace('###', num)
+                r_map[sp + 4] += '   ╰──┴───┴──╯   '
         except Exception as e:
-            r_map[sp + 0] += ' 00000000000000000 '
-            r_map[sp + 1] += ' 0               0 '
-            r_map[sp + 2] += ' 0    X     X    0 '
-            r_map[sp + 3] += ' 0     X   X     0 '
-            r_map[sp + 4] += ' 0      X X      0 '
-            r_map[sp + 5] += ' 0       X       0 '
-            r_map[sp + 6] += ' 0      X X      0 '
-            r_map[sp + 7] += ' 0     X   X     0 '
-            r_map[sp + 8] += ' 0    X     X    0 '
-            r_map[sp + 9] += ' 0               0 '
-            r_map[sp +10] += ' 0               0 '
-            r_map[sp +11] += ' 00000000000000000 '
+            r_map[sp + 0] += '   ╭─────────╮   '
+            r_map[sp + 1] += '   │         │   '
+            r_map[sp + 2] += '   │    ╳    │   '
+            r_map[sp + 3] += '   │         │   '
+            r_map[sp + 4] += '   ╰─────────╯   '
 
-    r_map[sp + 12] = ''
-    return sp + 13
+    r_map[sp + 5] = ''
+    return sp + 6
