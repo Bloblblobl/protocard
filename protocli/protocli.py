@@ -9,13 +9,13 @@ except:
                                       render_board, \
                                       render_player_hand
 try:
-    from protocard.Player import Player
+    from protocard.player import Player
 except:
-    from Player import Player
+    from player import Player
 try:
-    from protocard.Card import Card
+    from protocard.card import Card
 except:
-    from Card import Card
+    from card import Card
 
 
 def welcome_message():

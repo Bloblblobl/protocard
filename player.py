@@ -1,7 +1,7 @@
 try:
-    from protocard.Zone import Zone
+    from protocard.zone import Zone
 except Exception as e:
-    from Zone import Zone
+    from zone import Zone
 
 
 class Player(object):
