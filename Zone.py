@@ -18,11 +18,13 @@ class Zone(object):
             self.player, len(self.cards))
 
     def parse_file(self, file_path):
+        ''' MOVE TO EXTERNAL TOOL '''
         for line in open(file_path, 'r'):
             card = line.split('|')
             self.cards.append(Card(card[0], card[1], card[2], card[3]))
 
     def render_cards(self, start=0, length=0):
+        ''' MOVE TO GAME CONTROLLER '''
         if length == 0:
             for card in self.cards:
                 card.standalone_render()

@@ -3,4 +3,5 @@ try:
 except Exception as e:
     from protocli.protocli import main
 
-main()
+if __name__ == '__main__':
+    main()
