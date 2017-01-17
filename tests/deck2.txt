@@ -1,10 +1,20 @@
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Pawn|LameBoy|5|5|
-Will|LameBoy|0|99|
+King|The most important piece|10|1|
+Queen|The most powerful piece|8|10|
+Rook|The most straightforward piece|2|10|
+Bishop|The most crooked piece|5|5|
+Knight|The most graceful piece|7|3|
+Pawn|The most simple piece|1|1|
+B.E.W.D.|Blue Eyes White Dragon!|4|20|
+Yo Mamma|A cruel mistress|6|9|
+Will|A lame kid|99|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|
+Blank|[BLANK]|0|0|

@@ -46,7 +46,7 @@ def render_enemy_hand(hand, r_map, sp=0):
     # sp - starting point for the render map
     r_map = _extend_map(r_map, 10)
     for i in range(0, hand.max_size):
-        try:
+        if i < len(hand.cards):
             r_map[sp + 0] += '   ▄▄▄▄▄▄▄▄▄▄▄   '
             r_map[sp + 1] += '   █▓▓▓▓▓▓▓▓▓█   '
             r_map[sp + 2] += '   █▓▓▓▓▓▓▓▓▓█   '
@@ -56,7 +56,7 @@ def render_enemy_hand(hand, r_map, sp=0):
             r_map[sp + 6] += '   █▓▓▓▓▓▓▓▓▓█   '
             r_map[sp + 7] += '   █▓▓▓▓▓▓▓▓▓█   '
             r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
-        except:
+        else:
             _render_empty_hand_card(r_map, sp)
     r_map[sp + 9] = ''
     return sp + 10
@@ -66,7 +66,7 @@ def render_player_hand(hand, r_map, sp=0):
     # sp - starting point for the render map
     r_map = _extend_map(r_map, 10)
     for i in range(0, hand.max_size):
-        try:
+        if i < len(hand.cards):
             card = hand.cards[i]
             num = fit_info(i, 2, 'right', '#')
             c = 'CC'
@@ -84,7 +84,7 @@ def render_player_hand(hand, r_map, sp=0):
             r_map[sp + 6] += '   █──╮   ╭──█   '
             r_map[sp + 7] += '   █AA│   │HH█   '.replace('AA', atk).replace('HH', hlt)
             r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
-        except Exception as e:
+        else:
             _render_empty_hand_card(r_map, sp)
     r_map[sp + 9] = ''
     return sp + 10
@@ -94,7 +94,7 @@ def render_board(board, r_map, sp=0):
     # sp - starting point for the render map
     r_map = _extend_map(r_map, 6)
     for i in range(0, board.max_size):
-        try:
+        if i < len(board.cards):
             card = board.cards[i]
             num = fit_info(i, 3, 'mid', ' ')
             name = fit_info(card.name, 9, 'mid')
@@ -113,7 +113,7 @@ def render_board(board, r_map, sp=0):
                 r_map[sp + 2] += '   ├──╮   ╭──┤   '
                 r_map[sp + 3] += '   │AA│###│HH│   '.replace('AA', atk).replace('HH', hlt).replace('###', num)
                 r_map[sp + 4] += '   ╰──┴───┴──╯   '
-        except Exception as e:
+        else:
             r_map[sp + 0] += '   ╭─────────╮   '
             r_map[sp + 1] += '   │         │   '
             r_map[sp + 2] += '   │    ╳    │   '

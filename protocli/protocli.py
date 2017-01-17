@@ -1,21 +1,21 @@
-import os, sys
+import os
 
 try:
-    from protocard.protocli.ascii_render import render_enemy_hand, \
-                                                render_board, \
-                                                render_player_hand
-except:
-    from protocli.ascii_render import render_enemy_hand, \
-                                      render_board, \
-                                      render_player_hand
+    from protocard.protocli.ascii_render import render_enemy_hand, render_board, render_player_hand
+except ImportError:
+    from protocli.ascii_render import render_enemy_hand, render_board, render_player_hand
 try:
     from protocard.player import Player
-except:
+except ImportError:
     from player import Player
 try:
     from protocard.card import Card
-except:
+except ImportError:
     from card import Card
+try:
+    from protocard.game_controller import GameController
+except ImportError:
+    from game_controller import GameController
 
 
 def welcome_message():
@@ -28,87 +28,32 @@ def welcome_message():
     input()
     os.system('cls')
 
-    num_players = None
-    while num_players is None:
-        try:
-            print('How many players are we working with?')
-            num_players = int(input())
-        except ValueError:
-            os.system('cls')
-            print('Sorry, not a valid number! Try again.')
-            num_players = None
+
+def render_map(game_state):
     os.system('cls')
-    return num_players
-
-
-def generate_players(num_players):
-    players = {}
-    for i in range(0, num_players):
-        try:
-            players[i] = Player(i, 'tests/deck{}.txt'.format(i+1))
-        except Exception:
-            players[i] = Player(i, 'tests/deck1.txt')
-    return players
-
-
-def play_card(player, hand_pos):
-    if len(player.board.cards) < player.max_board:
-        try:
-            player.board.cards.append(player.hand.cards[hand_pos])
-            del player.hand.cards[hand_pos]
-        except Exception as e:
-            print(e)
-
-
-def handle_command(player):
-    command = input('>>> ')
-    if command.startswith('p'):
-        if command[1:3] == '->':
-            play_card(player, int(command[3]))
-        return True
-    if command == 'exit':
-        os.system('cls')
-        sys.exit()
-    else:
-
-        print('Please try again')
-        return False
-
-
-def play_turn(player, enemy):
-    os.system('cls')
-    draw_cards(player, 1)
-    r_map=[]
+    r_map = []
     sp = 0
+    enemy = game_state.other_player
+    player = game_state.curr_player
+
     sp = render_enemy_hand(enemy.hand, r_map, sp)
     sp = render_board(enemy.board, r_map, sp)
     sp = render_board(player.board, r_map, sp)
-    sp = render_player_hand(player.hand, r_map, sp)
+    render_player_hand(player.hand, r_map, sp)
     for line in r_map:
         print(line)
-    command = False
-    while not command:
-        command = handle_command(player)
-
-
-def draw_cards(player, num):
-    for i in range(0, num):
-        if len(player.hand.cards) < player.max_hand:
-            try:
-                player.hand.cards.append(player.deck.cards[0])
-                del player.deck.cards[0]
-            except:
-                pass
+    for action in game_state.action_log:
+        print(action)
 
 
 def main():
-    num_players = welcome_message()
-    players = generate_players(num_players)
-    draw_cards(players[0], 7)
-    draw_cards(players[1], 7)
+    players = [Player(1, 'tests/deck1.txt'), Player(2, 'tests/deck2.txt')]
+    gc = GameController(players)
+    welcome_message()
+    game_state = gc.start_game()
     while True:
-        play_turn(players[0], players[1])
-        play_turn(players[1], players[0])
+        render_map(game_state)
+        game_state = gc.manage_turn()
 
 
 if __name__ == '__main__':

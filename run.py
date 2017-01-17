@@ -1,6 +1,6 @@
 try:
     from protocard.protocli.protocli import main
-except Exception as e:
+except ImportError:
     from protocli.protocli import main
 
 if __name__ == '__main__':

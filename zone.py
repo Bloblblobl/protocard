@@ -1,6 +1,6 @@
 try:
     from protocard.card import Card
-except Exception as e:
+except ImportError:
     from card import Card
 
 
@@ -14,23 +14,11 @@ class Zone(object):
             self.parse_file(deck_name)
 
     def __repr__(self):
-        return "<Deck player:{} cards:{}>".format(
-            self.player, len(self.cards))
+        return "<{} cards:{} max size:{}>".format(
+            self.ztype, len(self.cards), self.max_size)
 
     def parse_file(self, file_path):
-        ''' MOVE TO EXTERNAL TOOL '''
+        # MOVE TO EXTERNAL TOOL
         for line in open(file_path, 'r'):
             card = line.split('|')
             self.cards.append(Card(card[0], card[1], card[2], card[3]))
-
-    def render_cards(self, start=0, length=0):
-        ''' MOVE TO GAME CONTROLLER '''
-        if length == 0:
-            for card in self.cards:
-                card.standalone_render()
-        else:
-            for i in range(start, length):
-                try:
-                    self.cards[i].standalone_render()
-                except Exception as e:
-                    print(e)
