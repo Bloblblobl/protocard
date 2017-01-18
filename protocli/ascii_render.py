@@ -44,8 +44,7 @@ def _render_empty_hand_card(r_map, sp):
 
 def render_enemy_hand(hand, r_map, sp=0):
     # sp - starting point for the render map
-    r_map = _extend_map(r_map, 10)
-    r_map_len = hand.max_size * 17
+    r_map = _extend_map(r_map, 9)
     for i in range(0, hand.max_size):
         if i < len(hand.cards):
             r_map[sp + 0] += '   ▄▄▄▄▄▄▄▄▄▄▄   '
@@ -59,14 +58,13 @@ def render_enemy_hand(hand, r_map, sp=0):
             r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
         else:
             _render_empty_hand_card(r_map, sp)
-    r_map[sp + 9] = ' ' * r_map_len
-    return sp + 10
+    _add_border_to_lines(r_map, sp, 8)
+    return sp + 9
 
 
 def render_player_hand(hand, r_map, sp=0):
     # sp - starting point for the render map
-    r_map = _extend_map(r_map, 10)
-    r_map_len = hand.max_size * 17
+    r_map = _extend_map(r_map, 9)
     for i in range(0, hand.max_size):
         if i < len(hand.cards):
             card = hand.cards[i]
@@ -88,14 +86,13 @@ def render_player_hand(hand, r_map, sp=0):
             r_map[sp + 8] += '   ▀▀▀▀▀▀▀▀▀▀▀   '
         else:
             _render_empty_hand_card(r_map, sp)
-    r_map[sp + 9] = ' ' * r_map_len
-    return sp + 10
+    _add_border_to_lines(r_map, sp, 8)
+    return sp + 9
 
 
 def render_board(board, r_map, sp=0):
     # sp - starting point for the render map
-    r_map = _extend_map(r_map, 6)
-    r_map_len = board.max_size * 17
+    r_map = _extend_map(r_map, 5)
     for i in range(0, board.max_size):
         if i < len(board.cards):
             card = board.cards[i]
@@ -123,5 +120,49 @@ def render_board(board, r_map, sp=0):
             r_map[sp + 3] += '   │         │   '
             r_map[sp + 4] += '   ╰─────────╯   '
 
-    r_map[sp + 5] = ' ' * r_map_len
-    return sp + 6
+    _add_border_to_lines(r_map, sp, 4)
+    return sp + 5
+
+
+def render_border_top(r_map, sp):
+    r_map = _extend_map(r_map, 1)
+    r_map[sp] = '╔' + '═' * 119 + '╗'
+    return sp + 1
+
+
+def render_border_bottom(r_map, sp):
+    r_map = _extend_map(r_map, 1)
+    r_map[sp] = '╚' + '═' * 119 + '╝'
+    return sp + 1
+
+
+def render_border_divider(r_map, sp):
+    r_map = _extend_map(r_map, 1)
+    r_map[sp] = '╠' + '═' * 119 + '╣'
+    return sp + 1
+
+
+def render_splitter(r_map, sp, player=False):
+    r_map = _extend_map(r_map, 3)
+    r_map[sp + 0] = '╠' + '═' * 23 + '╗' + ' ' * 78 + '╔' + '═' * 16 + '╣'
+    r_map[sp + 1] = '║ ▼ ENEMY BATTLEFIELD ▼ ╠' + '═' * 78 + '╣ ▲ ENEMY HAND ▲ ║'
+    r_map[sp + 2] = '╠' + '═' * 23 + '╝' + ' ' * 78 + '╚' + '═' * 16 + '╣'
+
+    if player:
+        r_map[sp + 1] = r_map[sp + 1].replace('ENEMY', ' YOUR').replace('▼', '~').replace('▲', '▼').replace('~', '▲')
+
+    return sp + 3
+
+
+def _add_border_to_lines(r_map, sp, num, extenders=[]):
+    for i in range(sp, sp + num + 1):
+        if i in extenders:
+            r_map[i] = '║' + r_map[i] + '╠'
+        else:
+            r_map[i] = '║' + r_map[i] + '║'
+
+
+def add_empty_line(r_map, sp):
+    r_map = _extend_map(r_map, 1)
+    r_map[sp] = '║' + ' ' * 119 + '║'
+    return sp + 1

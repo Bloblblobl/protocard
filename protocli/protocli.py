@@ -1,9 +1,9 @@
 import os
 
 try:
-    from protocard.protocli.ascii_render import render_enemy_hand, render_board, render_player_hand
+    from protocard.protocli import ascii_render
 except ImportError:
-    from protocli.ascii_render import render_enemy_hand, render_board, render_player_hand
+    from protocli import ascii_render
 try:
     from protocard.player import Player
 except ImportError:
@@ -36,10 +36,23 @@ def render_map(game_state):
     enemy = game_state.other_player
     player = game_state.curr_player
 
-    sp = render_enemy_hand(enemy.hand, r_map, sp)
-    sp = render_board(enemy.board, r_map, sp)
-    sp = render_board(player.board, r_map, sp)
-    render_player_hand(player.hand, r_map, sp)
+    sp = ascii_render.render_border_top(r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_enemy_hand(enemy.hand, r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_splitter(r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_board(enemy.board, r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_border_divider(r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_board(player.board, r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_splitter(r_map, sp, True)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    sp = ascii_render.render_player_hand(player.hand, r_map, sp)
+    sp = ascii_render.add_empty_line(r_map, sp)
+    ascii_render.render_border_bottom(r_map, sp)
 
     # Add action log to render map
     r_map[3] += ' ACTION LOG:'
