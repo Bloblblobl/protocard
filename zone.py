@@ -21,4 +21,4 @@ class Zone(object):
         # MOVE TO EXTERNAL TOOL
         for line in open(file_path, 'r'):
             card = line.split('|')
-            self.cards.append(Card(card[0], card[1], card[2], card[3]))
+            self.cards.append(Card(card[0], card[1], int(card[2]), int(card[3])))

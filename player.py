@@ -9,19 +9,20 @@ class Player(object):
         self.deck = Zone('Deck', deck_name)
         self.hand = Zone('Hand')
         self.board = Zone('Board')
+        self.graveyard = Zone('Graveyard')
         self.player_id = player_id
 
     def draw_cards(self, num):
         drawn_cards = []
+        if num > self.hand.max_size - len(self.hand.cards):
+            return 'No room in hand'
+
         for i in range(0, num):
-            if len(self.hand.cards) < self.hand.max_size:
-                if self.deck.cards[0]:
-                    drawn_cards.append(self.deck.cards[0])
-                    del self.deck.cards[0]
-                else:
-                    return 'Deck is empty'
+            if self.deck.cards[0]:
+                drawn_cards.append(self.deck.cards[0])
+                del self.deck.cards[0]
             else:
-                return 'Hand is full'
+                return 'Deck is empty'
 
         for card in drawn_cards:
             self.hand.cards.append(card)
@@ -42,3 +43,20 @@ class Player(object):
             return 'Card is not in hand'
 
         return played_card
+
+    def attack(self, attacker, defender):
+        defender.take_damage(attacker.attack_curr)
+        attacker.take_damage(defender.attack_curr)
+
+    def check_for_deaths(self):
+        dead_cards = []
+        for i in range(0, len(self.board.cards)):
+            try:
+                if self.board.cards[i].health_curr == 0:
+                    self.graveyard.cards.append(self.board.cards[i])
+                    dead_cards.append(self.board.cards[i])
+                    del self.board.cards[i]
+            except IndexError:
+                continue
+
+        return dead_cards

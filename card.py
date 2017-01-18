@@ -16,5 +16,9 @@ class Card(object):
     def info_message(self):
         return '{}: {}/{}'.format(self.name, self.attack_stat, self.health_stat)
 
+    def take_damage(self, damage):
+        new_health = self.health_curr - damage
+        self.health_curr = 0 if new_health <= 0 else new_health
+
     def on_play(self):
         pass

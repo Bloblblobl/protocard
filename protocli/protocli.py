@@ -40,10 +40,17 @@ def render_map(game_state):
     sp = render_board(enemy.board, r_map, sp)
     sp = render_board(player.board, r_map, sp)
     render_player_hand(player.hand, r_map, sp)
+
+    # Add action log to render map
+    r_map[3] += ' ACTION LOG:'
+    for i in range(0, len(game_state.action_log)):
+        try:
+            r_map[i + 4] += ' ' + game_state.action_log[i]
+        except IndexError:
+            continue
+
     for line in r_map:
         print(line)
-    for action in game_state.action_log:
-        print(action)
 
 
 def main():

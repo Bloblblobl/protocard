@@ -7,3 +7,4 @@ class GameState(object):
         self.other_player = self.players[2]
 
         self.action_log = []
+        self.game_log = []
