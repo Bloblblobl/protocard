@@ -1,6 +1,8 @@
 import os
 import sys
 
+from math import ceil
+
 try:
     from protocard.game_state import GameState
 except ImportError:
@@ -103,11 +105,15 @@ class GameController(object):
         old_curr_player = self.game_state.curr_player
         self.game_state.curr_player = self.game_state.other_player
         self.game_state.other_player = old_curr_player
+        self.game_state.curr_turn += 1
 
         # Refresh action log and store last turn in game log
         for item in self.game_state.action_log:
             self.game_state.game_log.append(item)
         self.game_state.action_log = []
+        self.game_state.action_log.append('Player {}\'s Turn {} Begins'.format(self.game_state.curr_player.player_id,
+                                                                               ceil(self.game_state.curr_turn / 2)))
+        self.game_state.new_turn = True
 
         # Draw one at the beginning of the turn if there's room
         if len(self.game_state.curr_player.hand.cards) < self.game_state.curr_player.hand.max_size:
@@ -115,6 +121,7 @@ class GameController(object):
         return self.game_state
 
     def manage_turn(self):
+        self.game_state.new_turn = False
         result = False
         while not result:
             command = input('>>>')

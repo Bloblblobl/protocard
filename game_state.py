@@ -6,5 +6,7 @@ class GameState(object):
         self.curr_player = self.players[1]
         self.other_player = self.players[2]
 
-        self.action_log = []
+        self.action_log = ['A new game dawns...', '☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩']
         self.game_log = []
+        self.new_turn = False
+        self.curr_turn = 1

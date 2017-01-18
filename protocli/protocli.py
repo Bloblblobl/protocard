@@ -18,24 +18,26 @@ except ImportError:
     from game_controller import GameController
 
 
-def welcome_message():
+def display_message(message_path, replacer=None, replacee=None):
     os.system('cls')
-    message_file = open('protocli/welcome_screen.txt', 'r')
+    message_file = open(message_path, 'r', encoding="utf8")
     message = ''
     for line in message_file:
+        if replacer and replacee:
+            line = line.replace(replacer, replacee)
         message += line
     print(message)
     input()
     os.system('cls')
 
 
-def render_map(game_state):
-    os.system('cls')
-    r_map = []
-    sp = 0
+def render_whole_board(game_state):
     enemy = game_state.other_player
     player = game_state.curr_player
+    r_map = []
+    sp = 0
 
+    # A little messy right now, will be cleaned up
     sp = ascii_render.render_border_top(r_map, sp)
     sp = ascii_render.add_empty_line(r_map, sp)
     sp = ascii_render.render_enemy_hand(enemy.hand, r_map, sp)
@@ -66,10 +68,17 @@ def render_map(game_state):
         print(line)
 
 
+def render_map(game_state):
+    os.system('cls')
+    if game_state.new_turn:
+        display_message('protocli/display/new_turn.txt', '@', str(game_state.curr_player.player_id))
+    render_whole_board(game_state)
+
+
 def main():
     players = [Player(1, 'tests/deck1.txt'), Player(2, 'tests/deck2.txt')]
     gc = GameController(players)
-    welcome_message()
+    display_message('protocli/display/welcome_screen.txt')
     game_state = gc.start_game()
     while True:
         render_map(game_state)
