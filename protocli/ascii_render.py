@@ -142,10 +142,14 @@ def render_border_divider(r_map, sp):
     return sp + 1
 
 
-def render_splitter(r_map, sp, player=False):
+def render_splitter(r_map, sp, game_state, player=False):
     r_map = _extend_map(r_map, 3)
+    if player:
+        player_health = game_state.other_player.player_health
+    else:
+        player_health = game_state.curr_player.player_health
     r_map[sp + 0] = '╠' + '═' * 23 + '╗' + ' ' * 78 + '╔' + '═' * 16 + '╣'
-    r_map[sp + 1] = '║ ▼ ENEMY BATTLEFIELD ▼ ╠' + '═' * 78 + '╣ ▲ ENEMY HAND ▲ ║'
+    r_map[sp + 1] = '║ ▼ ENEMY BATTLEFIELD ▼ ╠' + '═' * 38 + str(player_health) + '═' * 38 + '╣ ▲ ENEMY HAND ▲ ║'
     r_map[sp + 2] = '╠' + '═' * 23 + '╝' + ' ' * 78 + '╚' + '═' * 16 + '╣'
 
     if player:

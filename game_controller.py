@@ -42,10 +42,10 @@ class GameController(object):
                 print('Attack what???')
                 return False
             try:
-                self.manage_attack(int(command_pieces[0]), int(command_pieces[1]))
+                self.manage_attack(int(command_pieces[0]), command_pieces[1])
                 return self.game_state
-            except ValueError:
-                print('Attack what???')
+            except TypeError:
+                print('Attack with what???')
                 return False
 
         elif command.startswith('pass'):
@@ -76,21 +76,33 @@ class GameController(object):
                 self.game_state.action_log.append('Player {} Played {}'.format(player.player_id, result.info_message()))
         self._check_for_deaths(player.player_id)
 
-    def manage_attack(self, attack_num, defend_num):
+    def manage_attack(self, attack_value, defend_value):
         try:
-            attacker = self.game_state.curr_player.board.cards[attack_num]
-            defender = self.game_state.other_player.board.cards[defend_num]
+            attacker = self.game_state.curr_player.board.cards[attack_value]
+            defender = self.game_state.other_player.board.cards[int(defend_value)]
         except IndexError:
             self.game_state.action_log.append('Invalid Target(s)')
             return
-
+        except ValueError:
+            if defend_value == 'p':
+                defender = self.game_state.curr_player
+            else:
+                return
         self.game_state.curr_player.attack(attacker, defender)
-        self.game_state.action_log.append('Player {} Attacked Player {}\'s {} with {}'.format(
-            self.game_state.curr_player.player_id,
-            self.game_state.other_player.player_id,
-            defender.name,
-            attacker.name
-        ))
+        try:
+            self.game_state.action_log.append('Player {} Attacked Player {}\'s {} with {}'.format(
+                self.game_state.curr_player.player_id,
+                self.game_state.other_player.player_id,
+                defender.name,
+                attacker.name
+            ))
+        except AttributeError:
+            self.game_state.action_log.append('Player {} Attacked Player {}\'s {} with {}'.format(
+                self.game_state.curr_player.player_id,
+                self.game_state.other_player.player_id,
+                'face',
+                attacker.name
+            ))
 
         self._check_for_deaths(1)
         self._check_for_deaths(2)

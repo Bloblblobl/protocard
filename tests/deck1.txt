@@ -7,7 +7,7 @@ Pawn|The most simple piece|1|1|
 B.E.W.D.|Blue Eyes White Dragon!|4|20|
 Yo Mamma|A cruel mistress|6|9|
 Bryce|A cool kid|99|99|
-Blank|[BLANK]|0|0|
+Richard|The best of the west|-1|69|
 Blank|[BLANK]|0|0|
 Blank|[BLANK]|0|0|
 Blank|[BLANK]|0|0|

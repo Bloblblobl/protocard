@@ -5,12 +5,13 @@ except ImportError:
 
 
 class Player(object):
-    def __init__(self, player_id, deck_name=None):
+    def __init__(self, player_id, deck_name=None, health = 30):
         self.deck = Zone('Deck', deck_name)
         self.hand = Zone('Hand')
         self.board = Zone('Board')
         self.graveyard = Zone('Graveyard')
         self.player_id = player_id
+        self.player_health = health
 
     def draw_cards(self, num):
         drawn_cards = []
@@ -46,7 +47,12 @@ class Player(object):
 
     def attack(self, attacker, defender):
         defender.take_damage(attacker.attack_curr)
-        attacker.take_damage(defender.attack_curr)
+        if hasattr(defender, 'attack_stat'):
+            attacker.take_damage(defender.attack_curr)
+
+    def take_damage(self, damage):
+        new_health = self.player_health - damage
+        self.player_health = 0 if new_health <= 0 else new_health
 
     def check_for_deaths(self):
         dead_cards = []

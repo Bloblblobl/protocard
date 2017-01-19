@@ -24,7 +24,8 @@ def display_message(message_path, replacer=None, replacee=None):
     message = ''
     for line in message_file:
         if replacer and replacee:
-            line = line.replace(replacer, replacee)
+            for i in range(len(replacer)):
+                line = line.replace(replacer[i], replacee[i])
         message += line
     print(message)
     input()
@@ -42,7 +43,7 @@ def render_whole_board(game_state):
     sp = ascii_render.add_empty_line(r_map, sp)
     sp = ascii_render.render_enemy_hand(enemy.hand, r_map, sp)
     sp = ascii_render.add_empty_line(r_map, sp)
-    sp = ascii_render.render_splitter(r_map, sp)
+    sp = ascii_render.render_splitter(r_map, sp, game_state)
     sp = ascii_render.add_empty_line(r_map, sp)
     sp = ascii_render.render_board(enemy.board, r_map, sp)
     sp = ascii_render.add_empty_line(r_map, sp)
@@ -50,7 +51,7 @@ def render_whole_board(game_state):
     sp = ascii_render.add_empty_line(r_map, sp)
     sp = ascii_render.render_board(player.board, r_map, sp)
     sp = ascii_render.add_empty_line(r_map, sp)
-    sp = ascii_render.render_splitter(r_map, sp, True)
+    sp = ascii_render.render_splitter(r_map, sp, game_state, True)
     sp = ascii_render.add_empty_line(r_map, sp)
     sp = ascii_render.render_player_hand(player.hand, r_map, sp)
     sp = ascii_render.add_empty_line(r_map, sp)
@@ -71,7 +72,10 @@ def render_whole_board(game_state):
 def render_map(game_state):
     os.system('cls')
     if game_state.new_turn:
-        display_message('protocli/display/new_turn.txt', '@', str(game_state.curr_player.player_id))
+        if game_state.curr_player.player_id == 2:
+            display_message('protocli/display/new_turn.txt', ['@','✡'], ['2','†'])
+        else:
+            display_message('protocli/display/new_turn.txt', ['@'], ['1'])
     render_whole_board(game_state)
 
 

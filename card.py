@@ -22,3 +22,4 @@ class Card(object):
 
     def on_play(self):
         pass
+
