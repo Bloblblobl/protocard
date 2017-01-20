@@ -32,14 +32,18 @@ class Player(object):
     def play_card(self, hand_pos):
         try:
             played_card = self.hand.cards[hand_pos]
-            if len(self.board.cards) < self.board.max_size:
-                if played_card:
-                    self.board.cards.append(played_card)
-                    del self.hand.cards[hand_pos]
-                else:
-                    return 'Card is not in hand'
+            if played_card:
+                if played_card.card_type == 'Creature':
+                    if len(self.board.cards) < self.board.max_size:
+                        if played_card:
+                            self.board.cards.append(played_card)
+                            del self.hand.cards[hand_pos]
+                    else:
+                        return 'Board is full'
+                elif played_card.card_type == 'Spell':
+                    return 'You cast a spell'
             else:
-                return 'Board is full'
+                return 'Card is not in hand'
         except IndexError:
             return 'Card is not in hand'
 

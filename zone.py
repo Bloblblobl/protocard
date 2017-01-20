@@ -5,7 +5,7 @@ except ImportError:
 
 
 class Zone(object):
-    def __init__(self, ztype, deck_name=None, cards=None, max_size=7):
+    def __init__(self, ztype: object, deck_name: object = None, cards: object = None, max_size: object = 7) -> object:
         self.ztype = ztype
         self.cards = cards if cards else []
         self.max_size = max_size
@@ -21,4 +21,7 @@ class Zone(object):
         # MOVE TO EXTERNAL TOOL
         for line in open(file_path, 'r'):
             card = line.split('|')
-            self.cards.append(Card(card[0], card[1], int(card[2]), int(card[3])))
+            try:
+                self.cards.append(Card(card[0], card[1], int(card[2]), int(card[3]), card[4], card[5]))
+            except IndexError:
+                self.cards.append(Card(card[0], card[1], int(card[2]), int(card[3])))

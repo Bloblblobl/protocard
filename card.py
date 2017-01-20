@@ -1,11 +1,12 @@
 class Card(object):
-    def __init__(self, name, descr, attack, health):
+    def __init__(self, name, descr, attack, health, card_type = 'Creature', effect = None):
         self.name = name
         self.descr = descr
         self.attack_stat = attack
         self.attack_curr = attack
         self.health_stat = health
         self.health_curr = health
+        self.card_type = card_type
         self.actions = 1
         self.exhausted = False
 

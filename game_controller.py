@@ -44,7 +44,7 @@ class GameController(object):
             try:
                 self.manage_attack(int(command_pieces[0]), command_pieces[1])
                 return self.game_state
-            except TypeError:
+            except ValueError:
                 print('Attack with what???')
                 return False
 

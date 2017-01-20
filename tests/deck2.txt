@@ -7,7 +7,7 @@ Pawn|The most simple piece|1|1|
 B.E.W.D.|Blue Eyes White Dragon!|4|20|
 Yo Mamma|A cruel mistress|6|9|
 Will|A lame kid|99|0|
-Blank|[BLANK]|0|0|
+Spell|Kill em|0|0|Spell|dmg3
 Blank|[BLANK]|0|0|
 Blank|[BLANK]|0|0|
 Blank|[BLANK]|0|0|
