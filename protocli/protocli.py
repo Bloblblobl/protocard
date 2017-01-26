@@ -58,9 +58,12 @@ def render_whole_board(game_state):
 
     # Add action log to render map
     r_map[3] += ' ACTION LOG:'
-    for i in range(0, len(game_state.action_log)):
+    messages = game_state.curr_player.action_log.get_log(0, len(game_state.curr_player.action_log.messages))
+    i = 0
+    for message in messages:
         try:
-            r_map[i + 4] += ' ' + game_state.action_log[i]
+            r_map[i + 4] += ' ' + message.display_message()
+            i += 1
         except IndexError:
             continue
 

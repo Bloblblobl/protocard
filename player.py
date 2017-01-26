@@ -2,6 +2,10 @@ try:
     from protocard.zone import Zone
 except ImportError:
     from zone import Zone
+try:
+    from protocard.message_log import MessageLog
+except ImportError:
+    from message_log import MessageLog
 
 
 class Player(object):
@@ -11,6 +15,7 @@ class Player(object):
         self.board = Zone('Board')
         self.graveyard = Zone('Graveyard')
         self.player_id = player_id
+        self.action_log = MessageLog(f'player{self.player_id}.actionlog')
 
     def draw_cards(self, num):
         drawn_cards = []

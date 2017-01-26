@@ -14,8 +14,8 @@ class GameController(object):
         self.game_state = GameState(players)
 
     def start_game(self):
-        self.manage_draw(self.game_state.curr_player, 7, True)
-        self.manage_draw(self.game_state.other_player, 7, True)
+        self.manage_draw(self.game_state.curr_player, 7, 'hidden')
+        self.manage_draw(self.game_state.other_player, 7, 'hidden')
         return self.game_state
 
     def manage_command(self, command):
@@ -52,28 +52,40 @@ class GameController(object):
             return self.pass_turn()
 
         elif command == 'exit':
+            player_logs = self.game_state.curr_player.action_log.get_log(excluded_types=[]) + \
+                          self.game_state.other_player.action_log.get_log(excluded_types=[])
+            self.game_state.game_log.add_messages(player_logs)
+            self.game_state.game_log.sort_log(['timestamp', 'player_id'])
+
+            self.game_state.game_log.write_to_file(excluded_types=[])
+            for player in self.game_state.players.values():
+                player.action_log.write_to_file()
             os.system('cls')
             sys.exit()
 
         print('That\'s not even a command!!!')
         return False
 
-    def manage_draw(self, player, num, hidden=False):
+    def manage_draw(self, player, num, mtype='message'):
         result = player.draw_cards(num)
-        if not hidden:
-            if type(result) == str:
-                self.game_state.action_log.append(result)
-            else:
-                for card in result:
-                    self.game_state.action_log.append('Player {} Drew {}'.format(player.player_id, card.info_message()))
+        if type(result) == str:
+            self.game_state.curr_player.action_log.add_message(result, player.player_id, self.game_state, 'error')
+        else:
+            for card in result:
+                self.game_state.curr_player.action_log.add_message(f'Drew {card.info_message()}',
+                                                                   player.player_id,
+                                                                   self.game_state,
+                                                                   mtype)
 
-    def manage_play_card(self, player, hand_pos, hidden=False):
+    def manage_play_card(self, player, hand_pos, mtype='message'):
         result = player.play_card(hand_pos)
-        if not hidden:
-            if type(result) == str:
-                self.game_state.action_log.append(result)
-            else:
-                self.game_state.action_log.append('Player {} Played {}'.format(player.player_id, result.info_message()))
+        if type(result) == str:
+            self.game_state.curr_player.action_log.add_message(result, player.player_id, self.game_state, 'error')
+        else:
+            self.game_state.curr_player.action_log.add_message(f'Played {result.info_message()}',
+                                                               player.player_id,
+                                                               self.game_state,
+                                                               mtype)
         self._check_for_deaths(player.player_id)
 
     def manage_attack(self, attack_num, defend_num):
@@ -81,16 +93,13 @@ class GameController(object):
             attacker = self.game_state.curr_player.board.cards[attack_num]
             defender = self.game_state.other_player.board.cards[defend_num]
         except IndexError:
-            self.game_state.action_log.append('Invalid Target(s)')
+            self.game_state.curr_player.action_log.add_message('Invalid Target(s)', 'curr', self.game_state, 'error')
             return
 
         self.game_state.curr_player.attack(attacker, defender)
-        self.game_state.action_log.append('Player {} Attacked Player {}\'s {} with {}'.format(
-            self.game_state.curr_player.player_id,
-            self.game_state.other_player.player_id,
-            defender.name,
-            attacker.name
-        ))
+        self.game_state.curr_player.action_log.add_message(f'{attacker.name} attacked {defender.name}',
+                                                           'curr',
+                                                           self.game_state)
 
         self._check_for_deaths(1)
         self._check_for_deaths(2)
@@ -98,7 +107,7 @@ class GameController(object):
     def _check_for_deaths(self, player_id):
         dead_cards = self.game_state.players[player_id].check_for_deaths()
         for card in dead_cards:
-            self.game_state.action_log.append('Player {} lost their {}'.format(player_id, card.name))
+            self.game_state.curr_player.action_log.add_message(f'{card.name} died', player_id, self.game_state)
 
     def pass_turn(self):
         # Switch players
@@ -107,12 +116,8 @@ class GameController(object):
         self.game_state.other_player = old_curr_player
         self.game_state.curr_turn += 1
 
-        # Refresh action log and store last turn in game log
-        for item in self.game_state.action_log:
-            self.game_state.game_log.append(item)
-        self.game_state.action_log = []
-        self.game_state.action_log.append('Player {}\'s Turn {} Begins'.format(self.game_state.curr_player.player_id,
-                                                                               ceil(self.game_state.curr_turn / 2)))
+        turn_num = ceil(self.game_state.curr_turn / 2)
+        self.game_state.curr_player.action_log.add_message(f'Turn {turn_num} Begins', 'curr', self.game_state)
         self.game_state.new_turn = True
 
         # Draw one at the beginning of the turn if there's room

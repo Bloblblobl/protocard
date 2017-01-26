@@ -1,3 +1,9 @@
+try:
+    from protocard.message_log import MessageLog
+except ImportError:
+    from message_log import MessageLog
+
+
 class GameState(object):
     def __init__(self, players):
         self.players = {}
@@ -6,7 +12,6 @@ class GameState(object):
         self.curr_player = self.players[1]
         self.other_player = self.players[2]
 
-        self.action_log = ['A new game dawns...', '☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩☩']
-        self.game_log = []
+        self.game_log = MessageLog(f'gamelog')
         self.new_turn = False
         self.curr_turn = 1
