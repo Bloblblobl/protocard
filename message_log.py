@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 
@@ -88,6 +89,8 @@ class MessageLog(object):
             self.add_message('Message does not exist', 0, mtype='error')
 
     def write_to_file(self, log_pos=0, display_len=0, excluded_types=['hidden'], start_time=None, end_time=None):
+        if not os.path.isidr('logfiles'):
+            os.makedirs('logfiles')
         f = open(f'logfiles/{self.name}.txt', 'w+')
         message_list = self.get_log(log_pos, display_len, excluded_types, start_time, end_time)
         for message in message_list:
